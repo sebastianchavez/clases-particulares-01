@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Detalle de reserva · EduClass</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#d4a017', 'primary-light': '#f4c430', 'background-dark': '#0f172a', 'background-card': '#1e293b' }, fontFamily: { display: ['Playfair Display'], sans: ['Inter'] } } } }
+  </script>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body data-page="detalle-reserva" class="bg-background-dark text-gray-200 font-sans">
+  <div id="appHeader"></div>
+
+  <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="max-w-4xl mx-auto" id="detalleContent"></div>
+  </main>
+
+  <div id="appFooter"></div>
+  <script src="js/app.js"></script>
+  <script>
+    function pageInit() {
+      if (!UI.requireAuth('detalle-reserva.html')) return;
+      const id = UI.getQueryParam('id');
+      const container = document.getElementById('detalleContent');
+      const r = id ? Reservas.get(id) : null;
+      if (!r) {
+        container.innerHTML = '<div class="text-center py-16"><h1 class="text-2xl font-bold text-white">Reserva no encontrada</h1><a href="perfil.html" class="btn-primary mt-6">Volver a mis reservas</a></div>';
+        return;
+      }
+      const s = UI.servicioById(r.servicioId);
+      const p = UI.profesionalById(r.profesionalId);
+      const est = UI.estadoBadge(r.estado);
+      const pag = UI.pagoBadge(r.pago);
+      const canCancel = Reservas.canCancel(r);
+      const isRefund = Reservas.refundable(r);
+
+      container.innerHTML = `
+        <div class="mb-6">
+          <a href="perfil.html" class="text-primary text-sm flex items-center gap-2 hover:text-primary-light transition-colors">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+            Volver a mis reservas
+          </a>
+        </div>
+
+        <div class="bg-background-card border border-gray-800 rounded-2xl overflow-hidden mb-6">
+          <div class="bg-primary/5 border-b border-primary/20 p-6 flex flex-col md:flex-row items-start md:items-center gap-4">
+            <img src="${s.imagen}" class="h-20 w-20 rounded-xl border-2 border-primary/30"/>
+            <div class="flex-1">
+              <p class="text-xs uppercase tracking-wider text-gray-400 mb-1">${UI.categoriaById(s.categoria).label}</p>
+              <h1 class="text-2xl md:text-3xl font-bold text-white" style="font-family: 'Playfair Display', serif;">${s.nombre}</h1>
+              <p class="text-gray-400 text-sm mt-1">Reserva #${r.id.toUpperCase()}</p>
+            </div>
+            <div class="flex flex-col gap-2 items-end">
+              <span class="text-xs px-3 py-1.5 rounded-full border ${est.cls}">${est.label}</span>
+              <span class="text-xs px-3 py-1.5 rounded-full border ${pag.cls}">${pag.label}</span>
+            </div>
+          </div>
+
+          <div class="p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <p class="text-xs uppercase tracking-wider text-gray-500 mb-2">Fecha y hora</p>
+              <div class="flex items-center gap-3">
+                <div class="h-12 w-12 rounded-lg bg-primary/10 border border-primary/30 flex items-center justify-center">
+                  <svg class="h-6 w-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                </div>
+                <div>
+                  <p class="text-white font-semibold">${UI.formatDate(r.fecha)}</p>
+                  <p class="text-gray-400 text-sm">${r.hora} · ${s.duracion} minutos</p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <p class="text-xs uppercase tracking-wider text-gray-500 mb-2">Modalidad</p>
+              <div class="flex items-center gap-3">
+                <div class="h-12 w-12 rounded-lg bg-primary/10 border border-primary/30 flex items-center justify-center">
+                  ${r.modalidad === 'online' ? '<svg class="h-6 w-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>' : '<svg class="h-6 w-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>'}
+                </div>
+                <div>
+                  <p class="text-white font-semibold">${UI.modalidadLabel(r.modalidad)}</p>
+                  <p class="text-gray-400 text-sm">${r.modalidad === 'online' ? 'Videollamada con pizarra' : 'Av. Larco 345, Miraflores'}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="md:col-span-2">
+              <p class="text-xs uppercase tracking-wider text-gray-500 mb-2">Tu tutor</p>
+              <div class="flex items-center gap-4 bg-background-dark/40 rounded-xl p-4 border border-gray-800">
+                <img src="${p.foto}" class="h-16 w-16 rounded-full object-cover border-2 border-primary/30"/>
+                <div class="flex-1">
+                  <p class="text-white font-semibold">${p.nombre}</p>
+                  <p class="text-primary text-xs uppercase tracking-wider">${p.rol}</p>
+                  <p class="text-gray-400 text-xs mt-1">${p.experiencia} años de experiencia · ★ ${p.rating}</p>
+                </div>
+                <a href="https://wa.me/51999555333" target="_blank" class="text-primary hover:text-primary-light">
+                  <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+                </a>
+              </div>
+            </div>
+
+            ${r.notas ? `<div class="md:col-span-2"><p class="text-xs uppercase tracking-wider text-gray-500 mb-2">Notas</p><div class="bg-background-dark/40 rounded-xl p-4 border border-gray-800"><p class="text-gray-300 text-sm">${r.notas}</p></div></div>` : ''}
+
+            <div class="md:col-span-2 border-t border-gray-800 pt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <p class="text-xs uppercase tracking-wider text-gray-500 mb-1">Servicio</p>
+                <p class="text-white font-semibold">${UI.formatPrice(s.precio)}</p>
+              </div>
+              ${r.modalidad === 'online' ? '<div><p class="text-xs uppercase tracking-wider text-gray-500 mb-1">Descuento online</p><p class="text-emerald-400 font-semibold">-20%</p></div>' : ''}
+              <div class="md:text-right">
+                <p class="text-xs uppercase tracking-wider text-gray-500 mb-1">Total pagado</p>
+                <p class="text-primary text-3xl font-bold" style="font-family: 'Playfair Display', serif;">${UI.formatPrice(r.precio)}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        ${r.estado !== 'completada' && r.estado !== 'anulada' ? `
+          <div class="bg-background-card border border-gray-800 rounded-2xl p-6 mb-6">
+            <h3 class="text-lg font-bold text-white mb-2 flex items-center gap-2" style="font-family: 'Playfair Display', serif;">
+              <svg class="h-5 w-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+              ¿Necesitas cancelar?
+            </h3>
+            <p class="text-gray-400 text-sm mb-2">${canCancel ? 'Puedes anular tu clase sin penalidad.' : 'Han pasado las 12 horas previas a la clase. La cancelación tiene un cargo del 50%.'}</p>
+            ${isRefund ? '<p class="text-emerald-400 text-xs mb-4">Como cancelas con más de 24 horas de anticipación y ya realizaste el pago, recibirás un reembolso completo.</p>' : '<p class="text-gray-500 text-xs mb-4">Si ya realizaste el pago, solo recibirás reembolso si cancelas con más de 24 horas de anticipación.</p>'}
+            <button id="btnAnular" class="px-5 py-2.5 rounded-lg text-red-300 border border-red-500/30 hover:bg-red-500/10 transition-colors text-sm font-semibold">Anular reserva</button>
+          </div>
+        ` : r.estado === 'anulada' ? `
+          <div class="bg-red-500/10 border border-red-500/30 rounded-2xl p-5 mb-6">
+            <p class="text-red-300 font-semibold">Esta reserva fue anulada.</p>
+            ${isRefund ? '<p class="text-gray-400 text-sm mt-1">El reembolso se procesó correctamente.</p>' : ''}
+          </div>
+        ` : `
+          <div class="bg-slate-500/10 border border-slate-500/30 rounded-2xl p-5 mb-6">
+            <p class="text-slate-300 font-semibold">Esta clase ya fue completada.</p>
+            <p class="text-gray-400 text-sm mt-1">Gracias por aprender con nosotros. ¡Te esperamos pronto!</p>
+          </div>
+        `}
+
+        ${r.estado === 'confirmada' && r.modalidad === 'online' ? `
+          <div class="bg-primary/5 border border-primary/30 rounded-2xl p-5 mb-6">
+            <p class="text-white font-semibold mb-2">Tu clase online</p>
+            <p class="text-gray-400 text-sm">Recibirás el enlace de acceso 1 hora antes del inicio de la clase en tu correo.</p>
+          </div>
+        ` : ''}
+
+        <div class="flex gap-3">
+          ${r.pago === 'pendiente' ? `<a href="pago.html?id=${r.id}" class="btn-primary">Completar pago</a>` : ''}
+          <a href="perfil.html" class="btn-outline">Volver a mis reservas</a>
+        </div>
+      `;
+
+      const btnAnular = document.getElementById('btnAnular');
+      if (btnAnular) {
+        btnAnular.addEventListener('click', () => {
+          UI.showConfirm(
+            '¿Anular esta reserva?',
+            'Esta acción no se puede deshacer. ' + (isRefund ? 'Recibirás un reembolso completo.' : 'Si cancelas dentro de las 12 horas previas, se cobrará el 50% del valor de la clase.'),
+            () => {
+              Reservas.update(r.id, { estado: 'anulada', canceladaEn: Date.now() });
+              UI.toast('Reserva anulada correctamente');
+              setTimeout(() => window.location.reload(), 700);
+            }
+          );
+        });
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pago confirmado · EduClass</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#d4a017', 'primary-light': '#f4c430', 'background-dark': '#0f172a', 'background-card': '#1e293b' }, fontFamily: { display: ['Playfair Display'], sans: ['Inter'] } } } }
+  </script>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body data-page="pago-confirmado" class="bg-background-dark text-gray-200 font-sans">
+  <div id="appHeader"></div>
+
+  <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="max-w-3xl mx-auto" id="confirmContent"></div>
+  </main>
+
+  <div id="appFooter"></div>
+  <script src="js/app.js"></script>
+  <script>
+    function pageInit() {
+      const id = UI.getQueryParam('id');
+      const container = document.getElementById('confirmContent');
+      const r = id ? Reservas.get(id) : null;
+      if (!r) {
+        container.innerHTML = '<div class="text-center py-16"><h1 class="text-2xl font-bold text-white">Reserva no encontrada</h1><a href="index.html" class="btn-primary mt-6">Volver al inicio</a></div>';
+        return;
+      }
+      const s = UI.servicioById(r.servicioId);
+      const p = UI.profesionalById(r.profesionalId);
+      container.innerHTML = `
+        <div class="text-center mb-10">
+          <div class="checkmark-circle mx-auto mb-6">
+            <div class="background"></div>
+            <div class="checkmark"></div>
+          </div>
+          <p class="text-primary uppercase tracking-[0.3em] text-xs mb-2 font-medium">Pago exitoso</p>
+          <h1 class="text-4xl md:text-5xl font-bold text-white mb-3" style="font-family: 'Playfair Display', serif;">¡Reserva confirmada!</h1>
+          <p class="text-gray-300 max-w-xl mx-auto">Tu pago fue procesado correctamente. Hemos enviado los detalles a tu correo electrónico.</p>
+        </div>
+
+        <div class="bg-background-card border border-emerald-500/30 rounded-xl p-5 mb-6 flex items-center gap-3">
+          <svg class="h-8 w-8 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+          <div>
+            <p class="text-white font-semibold">Pago procesado con éxito</p>
+            <p class="text-gray-400 text-sm">Número de operación: <span class="text-primary font-mono">OP-${r.id.toUpperCase().slice(1, 9)}</span></p>
+          </div>
+        </div>
+
+        <div class="bg-background-card border border-gray-800 rounded-2xl overflow-hidden mb-6" id="voucher">
+          <div class="bg-primary/5 border-b border-primary/20 p-5">
+            <div class="flex items-center justify-between">
+              <h2 class="text-white font-bold text-lg" style="font-family: 'Playfair Display', serif;">Comprobante de pago</h2>
+              <button onclick="window.print()" class="text-primary hover:text-primary-light text-sm flex items-center gap-1">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                Imprimir
+              </button>
+            </div>
+          </div>
+          <div class="p-6 space-y-3 text-sm">
+            <div class="flex justify-between"><span class="text-gray-400">N° de operación</span><span class="text-white font-mono">OP-${r.id.toUpperCase().slice(1, 9)}</span></div>
+            <div class="flex justify-between"><span class="text-gray-400">Fecha de pago</span><span class="text-white">${UI.formatDateShort(new Date(r.createdAt).toISOString().split('T')[0])}</span></div>
+            <div class="flex justify-between"><span class="text-gray-400">Método de pago</span><span class="text-white">${r.metodoPago === 'tarjeta' ? 'Tarjeta' : r.metodoPago === 'yape' ? 'Yape/Plin' : 'Transferencia'}</span></div>
+            <div class="border-t border-gray-800 pt-3 mt-3"></div>
+            <div class="flex justify-between"><span class="text-gray-400">Servicio</span><span class="text-white">${s.nombre}</span></div>
+            <div class="flex justify-between"><span class="text-gray-400">Tutor</span><span class="text-white">${p.nombre}</span></div>
+            <div class="flex justify-between"><span class="text-gray-400">Modalidad</span><span class="text-white">${UI.modalidadLabel(r.modalidad)}</span></div>
+            <div class="flex justify-between"><span class="text-gray-400">Fecha de clase</span><span class="text-white">${UI.formatDate(r.fecha)}</span></div>
+            <div class="flex justify-between"><span class="text-gray-400">Hora</span><span class="text-white">${r.hora}</span></div>
+            <div class="border-t border-gray-800 pt-3 mt-3 flex justify-between text-base">
+              <span class="text-white font-semibold">Total pagado</span>
+              <span class="text-primary text-xl font-bold" style="font-family: 'Playfair Display', serif;">${UI.formatPrice(r.precio)}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <a href="perfil.html" class="btn-primary justify-center w-full">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+            Ver mis reservas
+          </a>
+          <a href="index.html" class="btn-outline justify-center w-full">Volver al inicio</a>
+        </div>
+
+        <div class="mt-8 bg-background-card/50 border border-gray-800 rounded-xl p-5">
+          <h3 class="text-white font-semibold mb-3">Próximos pasos:</h3>
+          <ol class="space-y-2 list-decimal list-inside text-sm text-gray-300">
+            <li>Recibirás un email de confirmación con los datos.</li>
+            <li>24h antes de tu clase te enviaremos un recordatorio.</li>
+            <li>Si elegiste online, recibirás el enlace 1h antes del inicio.</li>
+            <li>Puedes consultar el detalle o cancelar desde tu perfil.</li>
+          </ol>
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>

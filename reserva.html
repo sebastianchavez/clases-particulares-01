@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reservar Clase · EduClass</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#d4a017', 'primary-light': '#f4c430', 'background-dark': '#0f172a', 'background-card': '#1e293b' }, fontFamily: { display: ['Playfair Display'], sans: ['Inter'] } } } }
+  </script>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body data-page="reserva" class="bg-background-dark text-gray-200 font-sans">
+  <div id="appHeader"></div>
+
+  <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="text-center mb-10">
+      <p class="text-primary uppercase tracking-[0.3em] text-xs mb-2 font-medium">Agenda tu clase</p>
+      <h1 class="text-4xl md:text-5xl font-bold text-white mb-3" style="font-family: 'Playfair Display', serif;">Reservar clase</h1>
+      <p class="text-gray-400">Sigue los pasos para completar tu reserva</p>
+    </div>
+
+    <div class="max-w-4xl mx-auto mb-10">
+      <div class="flex items-center justify-between">
+        <div class="flex flex-col items-center gap-1 flex-1">
+          <div id="dot1" class="step-dot w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold bg-primary text-background-dark border-2 border-primary">1</div>
+          <span class="text-xs text-gray-400">Servicio</span>
+        </div>
+        <div id="line1" class="step-line flex-1 mx-2"></div>
+        <div class="flex flex-col items-center gap-1 flex-1">
+          <div id="dot2" class="step-dot w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold bg-gray-800 text-gray-500 border-2 border-gray-700">2</div>
+          <span class="text-xs text-gray-500">Tutor</span>
+        </div>
+        <div id="line2" class="step-line flex-1 mx-2"></div>
+        <div class="flex flex-col items-center gap-1 flex-1">
+          <div id="dot3" class="step-dot w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold bg-gray-800 text-gray-500 border-2 border-gray-700">3</div>
+          <span class="text-xs text-gray-500">Fecha y hora</span>
+        </div>
+        <div id="line3" class="step-line flex-1 mx-2"></div>
+        <div class="flex flex-col items-center gap-1 flex-1">
+          <div id="dot4" class="step-dot w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold bg-gray-800 text-gray-500 border-2 border-gray-700">4</div>
+          <span class="text-xs text-gray-500">Confirmar</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div class="lg:col-span-2">
+        <div id="stepPanel" class="bg-background-card border border-gray-800 rounded-2xl p-6 md:p-8"></div>
+      </div>
+      <aside class="lg:col-span-1">
+        <div class="bg-background-card border border-primary/20 rounded-2xl p-6 sticky top-28">
+          <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2" style="font-family: 'Playfair Display', serif;">
+            <svg class="h-5 w-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+            Resumen
+          </h3>
+          <div class="space-y-3 text-sm" id="resumenBox">
+            <div class="flex justify-between"><span class="text-gray-400">Servicio:</span><span id="r-servicio" class="text-white font-medium">—</span></div>
+            <div class="flex justify-between"><span class="text-gray-400">Tutor:</span><span id="r-prof" class="text-white font-medium">—</span></div>
+            <div class="flex justify-between"><span class="text-gray-400">Modalidad:</span><span id="r-mod" class="text-white font-medium">—</span></div>
+            <div class="flex justify-between"><span class="text-gray-400">Fecha:</span><span id="r-fecha" class="text-white font-medium">—</span></div>
+            <div class="flex justify-between"><span class="text-gray-400">Hora:</span><span id="r-hora" class="text-white font-medium">—</span></div>
+            <div class="border-t border-gray-800 pt-3 mt-3 flex justify-between text-base">
+              <span class="text-white font-semibold">Total:</span>
+              <span id="r-precio" class="text-primary text-xl font-bold" style="font-family: 'Playfair Display', serif;">S/ 0.00</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <div id="appFooter"></div>
+  <script src="js/app.js"></script>
+  <script>
+    function pageInit() {
+      if (!UI.requireAuth('reserva.html')) return;
+
+      const params = new URLSearchParams(window.location.search);
+      const draft = Reservas.getDraft() || {};
+      const state = {
+        step: 1,
+        servicioId: draft.servicioId || params.get('servicio') || null,
+        profesionalId: draft.profesionalId || null,
+        modalidad: draft.modalidad || null,
+        fecha: draft.fecha || null,
+        hora: draft.hora || null,
+        notas: draft.notas || ''
+      };
+
+      function save() { Reservas.setDraft(state); }
+
+      function currentPrice() {
+        const s = UI.servicioById(state.servicioId);
+        if (!s) return 0;
+        return UI.precioPorModalidad(s, state.modalidad || 'presencial');
+      }
+
+      function updateResumen() {
+        const s = UI.servicioById(state.servicioId);
+        document.getElementById('r-servicio').textContent = s ? s.nombre : '—';
+        const p = UI.profesionalById(state.profesionalId);
+        document.getElementById('r-prof').textContent = p ? p.nombre : '—';
+        document.getElementById('r-mod').textContent = state.modalidad ? UI.modalidadLabel(state.modalidad) : '—';
+        document.getElementById('r-fecha').textContent = state.fecha ? UI.formatDate(state.fecha) : '—';
+        document.getElementById('r-hora').textContent = state.hora || '—';
+        document.getElementById('r-precio').textContent = UI.formatPrice(currentPrice());
+      }
+
+      function updateSteps() {
+        for (let i = 1; i <= 4; i++) {
+          const dot = document.getElementById('dot' + i);
+          dot.className = 'step-dot w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold border-2';
+          if (i < state.step) dot.classList.add('completed'), dot.classList.add('bg-primary', 'text-background-dark', 'border-primary');
+          else if (i === state.step) dot.classList.add('active'), dot.classList.add('bg-primary', 'text-background-dark', 'border-primary');
+          else dot.classList.add('bg-gray-800', 'text-gray-500', 'border-gray-700');
+        }
+        for (let i = 1; i <= 3; i++) {
+          const line = document.getElementById('line' + i);
+          if (i < state.step) line.classList.add('active');
+          else line.classList.remove('active');
+        }
+      }
+
+      function renderStep() {
+        updateSteps();
+        updateResumen();
+        const panel = document.getElementById('stepPanel');
+        if (state.step === 1) renderStep1(panel);
+        else if (state.step === 2) renderStep2(panel);
+        else if (state.step === 3) renderStep3(panel);
+        else renderStep4(panel);
+      }
+
+      function renderStep1(panel) {
+        panel.innerHTML = '<h2 class="text-2xl font-bold text-white mb-1" style="font-family: \'Playfair Display\', serif;">¿Qué te gustaría estudiar?</h2><p class="text-gray-400 text-sm mb-6">Selecciona el servicio que necesitas.</p><div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[460px] overflow-y-auto pr-2">' +
+          SERVICIOS.map(s => {
+            const sel = state.servicioId === s.id;
+            return '<div class="service-card border ' + (sel ? 'border-primary bg-primary/5' : 'border-gray-800 bg-background-dark/40') + ' rounded-xl p-4 cursor-pointer hover:border-primary transition-all" data-serv="' + s.id + '">' +
+              '<div class="flex gap-3">' +
+                '<img src="' + s.imagen + '" class="h-16 w-16 rounded-lg object-cover"/>' +
+                '<div class="flex-1">' +
+                  '<p class="text-white font-medium">' + s.nombre + '</p>' +
+                  '<p class="text-xs text-gray-400">' + UI.categoriaById(s.categoria).label + ' · ' + s.duracion + ' min</p>' +
+                  '<p class="text-primary font-bold text-sm mt-1">' + UI.formatPrice(s.precio) + '</p>' +
+                '</div></div></div>';
+          }).join('') + '</div><div class="flex justify-end mt-6"><button id="next1" class="btn-primary">Continuar</button></div>';
+
+        panel.querySelectorAll('[data-serv]').forEach(el => {
+          el.addEventListener('click', () => {
+            panel.querySelectorAll('[data-serv]').forEach(e => {
+              e.classList.remove('border-primary', 'bg-primary/5');
+              e.classList.add('border-gray-800', 'bg-background-dark/40');
+            });
+            el.classList.add('border-primary', 'bg-primary/5');
+            el.classList.remove('border-gray-800', 'bg-background-dark/40');
+            state.servicioId = el.dataset.serv;
+            state.profesionalId = null;
+            save();
+            updateResumen();
+          });
+        });
+
+        document.getElementById('next1').addEventListener('click', () => {
+          if (!state.servicioId) { UI.toast('Selecciona un servicio', 'error'); return; }
+          state.step = 2; save(); renderStep();
+        });
+      }
+
+      function renderStep2(panel) {
+        const servicio = UI.servicioById(state.servicioId);
+        const tutores = PROFESIONALES.filter(p => p.especialidades.includes(state.servicioId));
+        panel.innerHTML = '<h2 class="text-2xl font-bold text-white mb-1" style="font-family: \'Playfair Display\', serif;">Elige tu tutor</h2><p class="text-gray-400 text-sm mb-6">Tutores disponibles para ' + servicio.nombre + '</p>' +
+          (tutores.length === 0 ? '<p class="text-gray-400">No hay tutores disponibles para este servicio.</p>' :
+          '<div class="space-y-3 max-h-[460px] overflow-y-auto pr-2">' + tutores.map(p => {
+            const sel = state.profesionalId === p.id;
+            return '<div class="profesional-card border ' + (sel ? 'border-primary bg-primary/5' : 'border-gray-800 bg-background-dark/40') + ' rounded-xl p-4 cursor-pointer hover:border-primary" data-pro="' + p.id + '">' +
+              '<div class="flex gap-4">' +
+                '<img src="' + p.foto + '" class="h-16 w-16 rounded-full object-cover border-2 border-primary/30"/>' +
+                '<div class="flex-1">' +
+                  '<div class="flex items-start justify-between">' +
+                    '<div><p class="text-white font-semibold">' + p.nombre + '</p>' +
+                      '<p class="text-xs text-primary uppercase tracking-wider">' + p.rol + '</p></div>' +
+                    '<div class="text-right"><p class="text-primary text-sm">★ ' + p.rating + '</p><p class="text-gray-500 text-xs">' + p.experiencia + ' años exp.</p></div>' +
+                  '</div>' +
+                  '<p class="text-gray-400 text-xs mt-2 leading-relaxed">' + p.bio + '</p>' +
+                  '<div class="flex gap-1 mt-2">' +
+                    p.modalidad.map(m => '<span class="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/30">' + UI.modalidadLabel(m) + '</span>').join('') +
+                  '</div></div></div></div>';
+          }).join('') + '</div>') +
+          '<div class="flex justify-between mt-6"><button id="prev2" class="px-5 py-2 rounded-lg text-gray-300 border border-gray-700 hover:bg-gray-800 transition-colors">Atrás</button><button id="next2" class="btn-primary">Continuar</button></div>';
+
+        panel.querySelectorAll('[data-pro]').forEach(el => {
+          el.addEventListener('click', () => {
+            panel.querySelectorAll('[data-pro]').forEach(e => {
+              e.classList.remove('border-primary', 'bg-primary/5');
+              e.classList.add('border-gray-800', 'bg-background-dark/40');
+            });
+            el.classList.add('border-primary', 'bg-primary/5');
+            el.classList.remove('border-gray-800', 'bg-background-dark/40');
+            state.profesionalId = el.dataset.pro;
+            const prof = UI.profesionalById(state.profesionalId);
+            if (!state.modalidad || !prof.modalidad.includes(state.modalidad)) {
+              state.modalidad = prof.modalidad[0];
+            }
+            save();
+            updateResumen();
+          });
+        });
+
+        document.getElementById('prev2').addEventListener('click', () => { state.step = 1; save(); renderStep(); });
+        document.getElementById('next2').addEventListener('click', () => {
+          if (!state.profesionalId) { UI.toast('Selecciona un tutor', 'error'); return; }
+          state.step = 3; save(); renderStep();
+        });
+      }
+
+      function renderStep3(panel) {
+        const today = new Date().toISOString().split('T')[0];
+        const slots = state.servicioId && state.fecha ? UI.generateSlots(state.servicioId, state.fecha) : [];
+        panel.innerHTML = '<h2 class="text-2xl font-bold text-white mb-1" style="font-family: \'Playfair Display\', serif;">Elige fecha y hora</h2><p class="text-gray-400 text-sm mb-6">Selecciona modalidad, día y hora disponible.</p>' +
+          '<div class="mb-5"><label class="block text-sm text-gray-300 mb-2">Modalidad</label><div class="flex gap-2">' + MODALIDADES.map(m => {
+            const prof = UI.profesionalById(state.profesionalId);
+            const dis = prof && !prof.modalidad.includes(m.id);
+            return '<button data-sel-mod="' + m.id + '" ' + (dis ? 'disabled' : '') + ' class="filter-chip ' + (state.modalidad === m.id ? 'active' : '') + ' px-4 py-2 rounded-full border border-gray-700 text-sm font-medium ' + (dis ? 'opacity-30 cursor-not-allowed' : 'text-gray-300') + '">' + m.label + '</button>';
+          }).join('') + '</div></div>' +
+          '<div class="mb-5"><label class="block text-sm text-gray-300 mb-2">Fecha</label><input id="fechaInput" type="date" min="' + today + '" value="' + (state.fecha || today) + '" class="bg-background-dark border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-primary focus:ring-primary"/></div>' +
+          '<div><label class="block text-sm text-gray-300 mb-2">Horario disponible</label>' +
+          (slots.length === 0 ? '<p class="text-gray-400 text-sm p-4 bg-background-dark/40 rounded-lg border border-gray-800">No hay horarios disponibles para esta fecha.</p>' :
+            '<div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">' + slots.map(h => '<button data-hclass="' + h + '" class="time-slot ' + (state.hora === h ? 'selected' : '') + ' bg-background-dark/40 border border-gray-700 text-gray-300 rounded-lg py-2 text-sm">' + h + '</button>').join('') + '</div>') +
+          '</div><div class="flex justify-between mt-6"><button id="prev3" class="px-5 py-2 rounded-lg text-gray-300 border border-gray-700 hover:bg-gray-800 transition-colors">Atrás</button><button id="next3" class="btn-primary">Continuar</button></div>';
+
+        panel.querySelectorAll('[data-sel-mod]').forEach(b => {
+          b.addEventListener('click', () => {
+            panel.querySelectorAll('[data-sel-mod]').forEach(x => x.classList.remove('active'));
+            b.classList.add('active');
+            state.modalidad = b.dataset.selMod;
+            save();
+            renderStep();
+          });
+        });
+
+        document.getElementById('fechaInput').addEventListener('change', (e) => {
+          state.fecha = e.target.value;
+          save();
+          renderStep();
+        });
+
+        panel.querySelectorAll('[data-hclass]').forEach(b => {
+          b.addEventListener('click', () => {
+            panel.querySelectorAll('[data-hclass]').forEach(x => x.classList.remove('selected'));
+            b.classList.add('selected');
+            state.hora = b.dataset.hclass;
+            save();
+            updateResumen();
+          });
+        });
+
+        document.getElementById('prev3').addEventListener('click', () => { state.step = 2; save(); renderStep(); });
+        document.getElementById('next3').addEventListener('click', () => {
+          if (!state.fecha || !state.hora || !state.modalidad) { UI.toast('Selecciona fecha, hora y modalidad', 'error'); return; }
+          state.step = 4; save(); renderStep();
+        });
+      }
+
+      function renderStep4(panel) {
+        const user = Auth.current();
+        const s = UI.servicioById(state.servicioId);
+        const p = UI.profesionalById(state.profesionalId);
+        panel.innerHTML = '<h2 class="text-2xl font-bold text-white mb-1" style="font-family: \'Playfair Display\', serif;">Confirma tu reserva</h2><p class="text-gray-400 text-sm mb-6">Revisa los datos y déjanos cualquier indicación adicional.</p>' +
+          '<div class="bg-background-dark/40 rounded-xl p-5 border border-gray-800 mb-5">' +
+            '<h3 class="text-white font-semibold mb-3">Datos del estudiante</h3>' +
+            '<div class="grid grid-cols-1 md:grid-cols-2 gap-4">' +
+              '<div><label class="block text-xs text-gray-400 mb-1">Nombre</label><input id="cfNombre" value="' + user.nombre + '" class="w-full bg-background-dark border border-gray-700 rounded-lg px-3 py-2 text-white"/></div>' +
+              '<div><label class="block text-xs text-gray-400 mb-1">Email</label><input value="' + user.email + '" disabled class="w-full bg-background-dark border border-gray-700 rounded-lg px-3 py-2 text-gray-500"/></div>' +
+              '<div><label class="block text-xs text-gray-400 mb-1">Teléfono</label><input id="cfTel" value="' + (user.telefono || '') + '" class="w-full bg-background-dark border border-gray-700 rounded-lg px-3 py-2 text-white"/></div>' +
+              '<div><label class="block text-xs text-gray-400 mb-1">Nivel del estudiante</label><select class="w-full bg-background-dark border border-gray-700 rounded-lg px-3 py-2 text-white"><option>Primaria</option><option>Secundaria</option><option>Pre-universitario</option><option>Universitario</option><option>Profesional</option></select></div>' +
+            '</div>' +
+            '<div class="mt-3"><label class="block text-xs text-gray-400 mb-1">Notas o indicaciones especiales</label><textarea id="cfNotas" rows="3" class="w-full bg-background-dark border border-gray-700 rounded-lg px-3 py-2 text-white" placeholder="Ej: reforzar álgebra, examen próximo, etc.">' + state.notas + '</textarea></div>' +
+          '</div>' +
+          '<div class="bg-primary/5 border border-primary/30 rounded-xl p-5">' +
+            '<div class="flex items-start gap-3"><svg class="h-6 w-6 text-primary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>' +
+              '<div><p class="text-white font-semibold mb-1">Resumen de la clase</p>' +
+              '<p class="text-gray-300 text-sm">' + s.nombre + ' con ' + p.nombre + '</p>' +
+              '<p class="text-gray-400 text-sm">' + UI.formatDate(state.fecha) + ' a las ' + state.hora + '</p>' +
+              '<p class="text-gray-400 text-sm">' + UI.modalidadLabel(state.modalidad) + ' · ' + s.duracion + ' minutos</p>' +
+              '<p class="text-primary font-bold text-2xl mt-2" style="font-family: \'Playfair Display\', serif;">' + UI.formatPrice(currentPrice()) + '</p>' +
+            '</div></div>' +
+          '</div>' +
+          '<div class="flex justify-between mt-6"><button id="prev4" class="px-5 py-2 rounded-lg text-gray-300 border border-gray-700 hover:bg-gray-800 transition-colors">Atrás</button>' +
+          '<button id="confirmReserva" class="btn-primary">Continuar al pago</button></div>';
+
+        document.getElementById('prev4').addEventListener('click', () => { state.step = 3; save(); renderStep(); });
+        document.getElementById('confirmReserva').addEventListener('click', () => {
+          state.notas = document.getElementById('cfNotas').value;
+          const user = Auth.current();
+          const newReserva = Reservas.create({
+            userId: user.id,
+            servicioId: state.servicioId,
+            profesionalId: state.profesionalId,
+            fecha: state.fecha,
+            hora: state.hora,
+            modalidad: state.modalidad,
+            notas: state.notas,
+            precio: currentPrice()
+          });
+          Reservas.setPagoDraft({ reservaId: newReserva.id });
+          Reservas.clearDraft();
+          window.location.href = 'confirmacion.html?id=' + newReserva.id;
+        });
+      }
+
+      renderStep();
+    }
+  </script>
+</body>
+</html>

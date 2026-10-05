@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Servicios · EduClass · Clases Particulares</title>
+  <meta name="description" content="Conoce nuestro catálogo completo de servicios de clases particulares: refuerzo escolar, idiomas, pre-universitario y universitario." />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: { primary: '#d4a017', 'primary-light': '#f4c430', 'background-dark': '#0f172a', 'background-card': '#1e293b' },
+          fontFamily: { display: ['Playfair Display'], sans: ['Inter'] }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body data-page="servicios" class="bg-background-dark text-gray-200 font-sans">
+  <div id="appHeader"></div>
+
+  <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="text-center mb-12">
+      <p class="text-primary uppercase tracking-[0.3em] text-xs mb-3 font-medium">Nuestro catálogo</p>
+      <h1 class="text-4xl md:text-5xl font-bold text-white mb-3" style="font-family: 'Playfair Display', serif;">Servicios de clases</h1>
+      <p class="text-gray-400 max-w-2xl mx-auto">Refuerzo escolar, idiomas, preparación pre-universitaria y universitaria. Modalidad presencial y online para adaptarse a tu ritmo de vida.</p>
+    </div>
+
+    <div class="max-w-5xl mx-auto mb-10 space-y-6">
+      <div>
+        <p class="text-xs uppercase tracking-wider text-gray-500 mb-3">Categoría</p>
+        <div class="flex flex-wrap gap-2" id="catFilters">
+          <button data-cat="todas" class="filter-chip active px-4 py-2 rounded-full border border-gray-700 text-sm font-medium text-gray-300">Todas</button>
+          <button data-cat="escolar" class="filter-chip px-4 py-2 rounded-full border border-gray-700 text-sm font-medium text-gray-300">Escolar</button>
+          <button data-cat="preuniversitario" class="filter-chip px-4 py-2 rounded-full border border-gray-700 text-sm font-medium text-gray-300">Pre-universitario</button>
+          <button data-cat="universitario" class="filter-chip px-4 py-2 rounded-full border border-gray-700 text-sm font-medium text-gray-300">Universitario</button>
+          <button data-cat="idiomas" class="filter-chip px-4 py-2 rounded-full border border-gray-700 text-sm font-medium text-gray-300">Idiomas</button>
+        </div>
+      </div>
+      <div>
+        <p class="text-xs uppercase tracking-wider text-gray-500 mb-3">Modalidad</p>
+        <div class="flex flex-wrap gap-2" id="modFilters">
+          <button data-mod="todas" class="filter-chip active px-4 py-2 rounded-full border border-gray-700 text-sm font-medium text-gray-300">Todas</button>
+          <button data-mod="presencial" class="filter-chip px-4 py-2 rounded-full border border-gray-700 text-sm font-medium text-gray-300">Presencial</button>
+          <button data-mod="online" class="filter-chip px-4 py-2 rounded-full border border-gray-700 text-sm font-medium text-gray-300">Online</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto" id="serviciosGrid"></div>
+  </main>
+
+  <div id="appFooter"></div>
+  <script src="js/app.js"></script>
+  <script>
+    function pageInit() {
+      const grid = document.getElementById('serviciosGrid');
+      let cat = 'todas';
+      let mod = 'todas';
+
+      function render() {
+        const filtered = SERVICIOS.filter(s =>
+          (cat === 'todas' || s.categoria === cat) &&
+          (mod === 'todas' || s.modalidad === 'ambas' || s.modalidad === mod)
+        );
+        if (filtered.length === 0) {
+          grid.innerHTML = '<div class="col-span-full text-center py-16 text-gray-400">No hay servicios que coincidan con tu búsqueda.</div>';
+          return;
+        }
+        grid.innerHTML = filtered.map(s => `
+          <div class="card-hover bg-background-card border border-gray-800 rounded-xl overflow-hidden group flex flex-col">
+            <div class="aspect-[4/3] overflow-hidden relative">
+              <img src="${s.imagen}" alt="${s.nombre}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"/>
+              <span class="absolute top-3 left-3 bg-background-dark/80 backdrop-blur text-primary text-xs uppercase tracking-wider px-3 py-1 rounded-full border border-primary/30">${UI.categoriaById(s.categoria).label}</span>
+            </div>
+            <div class="p-5 flex flex-col flex-1">
+              <h3 class="text-white font-semibold text-lg mb-2">${s.nombre}</h3>
+              <p class="text-gray-400 text-sm leading-relaxed mb-4 flex-1">${s.descripcion}</p>
+              <div class="flex items-center gap-2 text-xs text-gray-400 mb-3">
+                <svg class="h-4 w-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                ${s.duracion} min
+                <span class="text-gray-700">|</span>
+                ${s.modalidad === 'ambas' ? 'Presencial / Online' : UI.modalidadLabel(s.modalidad)}
+              </div>
+              <div class="flex items-center justify-between pt-3 border-t border-gray-800">
+                <div>
+                  <p class="text-xs text-gray-500">Desde</p>
+                  <p class="text-primary font-bold text-xl" style="font-family: 'Playfair Display', serif;">${UI.formatPrice(s.precio)}</p>
+                </div>
+                <a href="reserva.html?servicio=${s.id}" class="btn-primary text-sm">Reservar</a>
+              </div>
+            </div>
+          </div>`).join('');
+      }
+
+      function bindFilters(container, onFilter) {
+        container.querySelectorAll('button').forEach(btn => {
+          btn.addEventListener('click', () => {
+            container.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const val = Object.values(btn.dataset)[0];
+            onFilter(val);
+            render();
+          });
+        });
+      }
+
+      bindFilters(document.getElementById('catFilters'), v => cat = v);
+      bindFilters(document.getElementById('modFilters'), v => mod = v);
+      render();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Términos y Condiciones · EduClass</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#d4a017', 'primary-light': '#f4c430', 'background-dark': '#0f172a', 'background-card': '#1e293b' }, fontFamily: { display: ['Playfair Display'], sans: ['Inter'] } } } }
+  </script>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body data-page="terminos" class="bg-background-dark text-gray-200 font-sans">
+  <div id="appHeader"></div>
+
+  <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="text-center mb-12">
+      <p class="text-primary uppercase tracking-[0.3em] text-xs mb-3 font-medium">Marco legal</p>
+      <h1 class="text-4xl md:text-5xl font-bold text-white mb-3" style="font-family: 'Playfair Display', serif;">Términos y Condiciones</h1>
+      <p class="text-gray-400">Última actualización: octubre 2026</p>
+    </div>
+
+    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <aside class="lg:col-span-1">
+        <div class="sticky top-28 bg-background-card border border-gray-800 rounded-xl p-5">
+          <p class="text-xs uppercase tracking-wider text-primary mb-3 font-medium">Contenido</p>
+          <nav id="toc" class="space-y-1"></nav>
+        </div>
+      </aside>
+
+      <article class="lg:col-span-3 legal-content bg-background-card border border-gray-800 rounded-2xl p-6 md:p-10">
+        <p class="text-gray-300 leading-relaxed mb-6">Los presentes Términos y Condiciones regulan el uso del sitio web y los servicios ofrecidos por <span class="text-primary font-semibold">EduClass Academia de Clases Particulares</span> (en adelante, "EduClass" o "la Academia"), identificada con RUC 20012345678, con domicilio en Av. Larco 345, Miraflores, Lima, Perú.</p>
+        <p class="text-gray-300 leading-relaxed mb-6">Al registrarte y utilizar nuestros servicios, aceptas expresamente estos Términos y Condiciones, nuestra Política de Privacidad y todas las políticas adicionales que rigen nuestra plataforma.</p>
+
+        <h2 id="sec1">1. Aceptación de los términos</h2>
+        <p>El uso de nuestra plataforma implica la aceptación plena y sin reservas de todos los términos aquí establecidos. Si no estás de acuerdo con alguno de ellos, te recomendamos no utilizar nuestros servicios.</p>
+        <p>EduClass se reserva el derecho de modificar estos términos en cualquier momento, notificando los cambios a través de nuestro sitio web y/o correo electrónico. Las modificaciones entrarán en vigor desde su publicación.</p>
+
+        <h2 id="sec2">2. Registro y cuenta</h2>
+        <p>Para acceder a los servicios de reserva de clases, debes crear una cuenta proporcionando información veraz, completa y actualizada. Eres responsable de mantener la confidencialidad de tus credenciales de acceso.</p>
+        <h3>Requisitos para registrarse</h3>
+        <ul>
+          <li>Ser mayor de 18 años o contar con autorización de un representante legal.</li>
+          <li>Proporcionar un email válido y activo.</li>
+          <li>Crear una contraseña segura de mínimo 6 caracteres.</li>
+          <li>Aceptar estos Términos y la Política de Privacidad.</li>
+        </ul>
+
+        <h2 id="sec3">3. Servicios ofrecidos</h2>
+        <p>EduClass ofrece servicios de clases particulares en las siguientes modalidades y niveles:</p>
+        <ul>
+          <li><span class="text-primary font-medium">Modalidad presencial:</span> en aulas de cuidado (Av. Larco 345, Miraflores).</li>
+          <li><span class="text-primary font-medium">Modalidad online:</span> mediante plataforma de videollamada con pizarra digital.</li>
+          <li><span class="text-primary font-medium">Niveles:</span> escolar (primaria y secundaria), pre-universitario, universitario e idiomas.</li>
+        </ul>
+        <p>La disponibilidad de tutores y horarios está sujeta a la programación semanal publicada en nuestro sitio.</p>
+
+        <h2 id="sec4">4. Reservas y pagos</h2>
+        <h3>4.1 Proceso de reserva</h3>
+        <p>Las reservas se realizan a través de nuestra plataforma siguiendo estos pasos: selección del servicio, elección del tutor, selección de fecha y hora, confirmación de datos y pago.</p>
+        <h3>4.2 Confirmación</h3>
+        <p>Una reserva se considera confirmada una vez realizado el pago correspondiente. Recibirás un correo electrónico con los detalles y código de reserva.</p>
+        <h3>4.3 Métodos de pago</h3>
+        <p>Aceptamos pagos con tarjeta de crédito/débito (Visa, Mastercard, Amex), Yape, Plin y transferencias bancarias a las cuentas indicadas en la sección de pago.</p>
+        <h3>4.4 Precios</h3>
+        <p>Los precios publicados incluyen IGV. La modalidad online tiene un 20% de descuento sobre el precio presencial. Los packs y mensualidades tienen descuentos adicionales según el plan elegido.</p>
+
+        <h2 id="sec5">5. Cancelaciones y reembolsos</h2>
+        <ul>
+          <li><span class="text-primary font-medium">Con más de 24 horas de anticipación:</span> reembolso del 100% del monto pagado.</li>
+          <li><span class="text-primary font-medium">Entre 12 y 24 horas antes:</span> reembolso del 50% del monto pagado.</li>
+          <li><span class="text-primary font-medium">Con menos de 12 horas:</span> no aplica reembolso, se considera la clase consumida.</li>
+          <li><span class="text-primary font-medium">Por parte de la academia:</span> reembolso del 100% si debemos cancelar por fuerza mayor o causa imputable a EduClass.</li>
+        </ul>
+        <p>Las cancelaciones se gestionan desde la sección "Mis reservas" en tu perfil de usuario. Los reembolsos se procesan en un máximo de 5 días hábiles a través del mismo método de pago.</p>
+
+        <h2 id="sec6">6. Packs y mensualidades</h2>
+        <p>Los paquetes de clases tienen una vigencia determinada (60 a 90 días según el plan) y deben ser utilizados dentro de ese período. Las mensualidades corresponden a 8 clases mensuales con asignación de tutor fijo.</p>
+        <p>Los paquetes no utilizados dentro de la vigencia no son reembolsables, salvo casos de fuerza mayor debidamente justificados.</p>
+
+        <h2 id="sec7">7. Obligaciones del estudiante</h2>
+        <ul>
+          <li>Asistir puntualmente a las clases presenciales o conectarse a tiempo a las clases online.</li>
+          <li>Mantener un trato respetuoso con los tutores y personal de la Academia.</li>
+          <li>No realizar grabaciones no autorizadas de las clases.</li>
+          <li>Utilizar la plataforma exclusivamente para fines educativos.</li>
+          <li>Notificar con anticipación cualquier cancelación.</li>
+        </ul>
+
+        <h2 id="sec8">8. Propiedad intelectual</h2>
+        <p>Todos los contenidos del sitio web, incluyendo但不 limitado a textos, gráficos, logotipos, imágenes, videos y software, están protegidos por las leyes de propiedad intelectual y son propiedad de EduClass o de sus licenciantes.</p>
+        <p>Los materiales educativos proporcionados durante las clases son para uso personal del estudiante y no pueden ser redistribuidos sin autorización.</p>
+
+        <h2 id="sec9">9. Limitación de responsabilidad</h2>
+        <p>EduClass no garantiza resultados académicos específicos, ya que estos dependen del esfuerzo y dedicación del estudiante. Nuestra responsabilidad se limita a la prestación del servicio contratado.</p>
+        <p>No somos responsables por interrupciones del servicio causadas por fallos de internet, mantenimiento técnico o causas de fuerza mayor.</p>
+
+        <h2 id="sec10">10. Protección de datos</h2>
+        <p>El tratamiento de tus datos personales se realiza conforme a nuestra <a href="privacidad.html" class="text-primary hover:text-primary-light">Política de Privacidad</a> y la Ley N° 29733, Ley de Protección de Datos Personales del Perú.</p>
+
+        <h2 id="sec11">11. Modificaciones al servicio</h2>
+        <p>EduClass se reserva el derecho de modificar, suspender o interrumpir cualquier aspecto del servicio en cualquier momento, previa notificación a los usuarios.</p>
+
+        <h2 id="sec12">12. Ley aplicable y jurisdicción</h2>
+        <p>Estos términos se rigen por las leyes de la República del Perú. Cualquier disputa será resuelta por los tribunales competentes de Lima, Perú.</p>
+
+        <h2 id="sec13">13. Contacto</h2>
+        <p>Para consultas sobre estos Términos y Condiciones, puedes contactarnos en:</p>
+        <ul>
+          <li>Email: <span class="text-primary">legal@educlass.pe</span></li>
+          <li>Teléfono: +51 999 555 333</li>
+          <li>Dirección: Av. Larco 345, Miraflores, Lima, Perú</li>
+        </ul>
+      </article>
+    </div>
+  </main>
+
+  <div id="appFooter"></div>
+  <script src="js/app.js"></script>
+  <script>
+    function pageInit() {
+      const toc = document.getElementById('toc');
+      const sections = document.querySelectorAll('.legal-content h2');
+      toc.innerHTML = Array.from(sections).map(s => {
+        const num = s.id.replace('sec', '');
+        const txt = s.textContent.replace(/^\d+\.\s*/, '');
+        return '<a href="#' + s.id + '" class="toc-link">' + num + '. ' + txt + '</a>';
+      }).join('');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Precios · EduClass · Clases Particulares</title>
+  <meta name="description" content="Conoce nuestros planes y precios de clases particulares. Individual, packs y mensualidades con descuentos." />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: { colors: { primary: '#d4a017', 'primary-light': '#f4c430', 'background-dark': '#0f172a', 'background-card': '#1e293b' }, fontFamily: { display: ['Playfair Display'], sans: ['Inter'] } }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body data-page="precios" class="bg-background-dark text-gray-200 font-sans">
+  <div id="appHeader"></div>
+
+  <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="text-center mb-12">
+      <p class="text-primary uppercase tracking-[0.3em] text-xs mb-3 font-medium">Planes y precios</p>
+      <h1 class="text-4xl md:text-5xl font-bold text-white mb-3" style="font-family: 'Playfair Display', serif;">Invierte en tu educación</h1>
+      <p class="text-gray-400 max-w-2xl mx-auto">Tarifas claras y transparentes. Elige el plan que mejor se adapte a tus objetivos y presupuesto.</p>
+    </div>
+
+    <section class="max-w-6xl mx-auto mb-16">
+      <div class="bg-background-card border border-primary/20 rounded-2xl p-6 md:p-8">
+        <h2 class="text-2xl font-bold text-white mb-1" style="font-family: 'Playfair Display', serif;">Calcula tu precio</h2>
+        <p class="text-sm text-gray-400 mb-6">Selecciona un servicio y modalidad para estimar el costo.</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm text-gray-400 mb-2">Servicio</label>
+            <select id="calcServicio" class="w-full bg-background-dark border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-primary focus:ring-primary"></select>
+          </div>
+          <div>
+            <label class="block text-sm text-gray-400 mb-2">Modalidad</label>
+            <select id="calcModalidad" class="w-full bg-background-dark border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-primary focus:ring-primary">
+              <option value="presencial">Presencial</option>
+              <option value="online">Online</option>
+            </select>
+          </div>
+        </div>
+        <div class="mt-6 pt-6 border-t border-gray-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div>
+            <p class="text-sm text-gray-400">Precio por clase</p>
+            <p class="text-primary text-4xl font-bold" id="calcPrecio" style="font-family: 'Playfair Display', serif;">S/ 0.00</p>
+          </div>
+          <div class="text-sm text-gray-400">
+            <p><span class="text-primary font-bold" id="calcPack4">—</span> por Pack 4 clases</p>
+            <p><span class="text-primary font-bold" id="calcPack8">—</span> por Pack 8 clases</p>
+          </div>
+          <a href="reserva.html" class="btn-primary">Reservar ahora</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="max-w-6xl mx-auto mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-white mb-8" style="font-family: 'Playfair Display', serif;">Nuestros planes</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="planesGrid"></div>
+    </section>
+
+    <section class="max-w-5xl mx-auto">
+      <h2 class="text-3xl md:text-4xl font-bold text-white mb-6 text-center" style="font-family: 'Playfair Display', serif;">Comparativa de precios por servicio</h2>
+      <div class="bg-background-card border border-gray-800 rounded-xl overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-background-dark">
+              <tr class="text-left">
+                <th class="px-4 py-3 text-primary uppercase tracking-wider text-xs">Servicio</th>
+                <th class="px-4 py-3 text-primary uppercase tracking-wider text-xs">Categoría</th>
+                <th class="px-4 py-3 text-primary uppercase tracking-wider text-xs">Duración</th>
+                <th class="px-4 py-3 text-primary uppercase tracking-wider text-xs">Presencial</th>
+                <th class="px-4 py-3 text-primary uppercase tracking-wider text-xs">Online</th>
+              </tr>
+            </thead>
+            <tbody id="tablaPrecios"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="max-w-4xl mx-auto mt-16 bg-background-card/50 border border-primary/20 rounded-2xl p-8">
+      <h3 class="text-2xl font-bold text-white mb-4" style="font-family: 'Playfair Display', serif;">Información importante</h3>
+      <ul class="space-y-3 text-gray-300 text-sm">
+        <li class="flex gap-3"><svg class="h-5 w-5 text-primary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>Las clases online tienen 20% menos que la modalidad presencial.</li>
+        <li class="flex gap-3"><svg class="h-5 w-5 text-primary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>Puedes cancelar hasta 12 horas antes sin costo. Después se cobra 50%.</li>
+        <li class="flex gap-3"><svg class="h-5 w-5 text-primary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>Los packs tienen vigencia de 60 a 90 días según el plan.</li>
+        <li class="flex gap-3"><svg class="h-5 w-5 text-primary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>La mensualidad incluye asignación de tutor fijo y reportes mensuales.</li>
+        <li class="flex gap-3"><svg class="h-5 w-5 text-primary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>Aceptamos pagos con tarjeta, Yape, Plin y transferencia bancaria.</li>
+      </ul>
+    </section>
+  </main>
+
+  <div id="appFooter"></div>
+  <script src="js/app.js"></script>
+  <script>
+    function pageInit() {
+      const select = document.getElementById('calcServicio');
+      SERVICIOS.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s.id;
+        opt.textContent = s.nombre + ' (' + UI.categoriaById(s.categoria).label + ')';
+        select.appendChild(opt);
+      });
+
+      function updateCalc() {
+        const s = UI.servicioById(select.value);
+        const mod = document.getElementById('calcModalidad').value;
+        const precio = UI.precioPorModalidad(s, mod);
+        document.getElementById('calcPrecio').textContent = UI.formatPrice(precio);
+        document.getElementById('calcPack4').textContent = UI.formatPrice(precio * 4 * 0.9);
+        document.getElementById('calcPack8').textContent = UI.formatPrice(precio * 8 * 0.85);
+      }
+
+      select.addEventListener('change', updateCalc);
+      document.getElementById('calcModalidad').addEventListener('change', updateCalc);
+      updateCalc();
+
+      const planesContainer = document.getElementById('planesGrid');
+      planesContainer.innerHTML = PLANES.map(p => `
+        <div class="bg-background-card border ${p.destacado ? 'border-primary shadow-2xl shadow-primary/10' : 'border-gray-800'} rounded-2xl p-6 relative">
+          ${p.destacado ? '<span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-background-dark text-xs font-bold px-3 py-1 rounded-full">MÁS POPULAR</span>' : ''}
+          <h3 class="text-white text-xl font-bold mb-1" style="font-family: 'Playfair Display', serif;">${p.nombre}</h3>
+          <p class="text-gray-400 text-sm mb-5">${p.desc}</p>
+          <div class="mb-5">
+            <span class="text-primary text-3xl font-bold" style="font-family: 'Playfair Display', serif;">${p.descuento}%</span>
+            <span class="text-gray-400 text-sm">de descuento</span>
+          </div>
+          <ul class="space-y-2 text-sm text-gray-300 mb-6">
+            ${p.beneficios.map(b => '<li class="flex gap-2"><svg class="h-5 w-5 text-primary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>' + b + '</li>').join('')}
+          </ul>
+          <a href="reserva.html" class="${p.destacado ? 'btn-primary' : 'btn-outline'} w-full justify-center">Contratar</a>
+        </div>
+      `).join('');
+
+      const tbody = document.getElementById('tablaPrecios');
+      tbody.innerHTML = SERVICIOS.map(s => `
+        <tr class="border-t border-gray-800 horario-row">
+          <td class="px-4 py-3 text-white font-medium">${s.nombre}</td>
+          <td class="px-4 py-3 text-gray-400">${UI.categoriaById(s.categoria).label}</td>
+          <td class="px-4 py-3 text-gray-400">${s.duracion} min</td>
+          <td class="px-4 py-3 text-primary font-semibold">${UI.formatPrice(s.precio)}</td>
+          <td class="px-4 py-3 text-primary font-semibold">${s.modalidad === 'ambas' || s.modalidad === 'online' ? UI.formatPrice(UI.precioPorModalidad(s, 'online')) : '—'}</td>
+        </tr>
+      `).join('');
+    }
+  </script>
+</body>
+</html>

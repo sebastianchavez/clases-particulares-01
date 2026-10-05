@@ -1,0 +1,97 @@
+﻿<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Galería · EduClass · Clases Particulares</title>
+  <meta name="description" content="Conoce nuestras instalaciones de EduClass en Miraflores. Aulas modernas, biblioteca y plataforma online." />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#d4a017', 'primary-light': '#f4c430', 'background-dark': '#0f172a', 'background-card': '#1e293b' }, fontFamily: { display: ['Playfair Display'], sans: ['Inter'] } } } }
+  </script>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body data-page="galeria" class="bg-background-dark text-gray-200 font-sans">
+  <div id="appHeader"></div>
+
+  <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="text-center mb-12">
+      <p class="text-primary uppercase tracking-[0.3em] text-xs mb-3 font-medium">Nuestras instalaciones</p>
+      <h1 class="text-4xl md:text-5xl font-bold text-white mb-3" style="font-family: 'Playfair Display', serif;">Galería</h1>
+      <p class="text-gray-400 max-w-2xl mx-auto">Descubre nuestros espacios diseñados para ofrecer la mejor experiencia de aprendizaje.</p>
+    </div>
+
+    <div class="flex flex-wrap gap-2 justify-center mb-10" id="galFilters">
+      <button data-cat="todas" class="filter-chip active px-4 py-2 rounded-full border border-gray-700 text-sm font-medium text-gray-300">Todas</button>
+      <button data-cat="aulas" class="filter-chip px-4 py-2 rounded-full border border-gray-700 text-sm font-medium text-gray-300">Aulas</button>
+      <button data-cat="biblioteca" class="filter-chip px-4 py-2 rounded-full border border-gray-700 text-sm font-medium text-gray-300">Biblioteca</button>
+      <button data-cat="online" class="filter-chip px-4 py-2 rounded-full border border-gray-700 text-sm font-medium text-gray-300">Online</button>
+      <button data-cat="eventos" class="filter-chip px-4 py-2 rounded-full border border-gray-700 text-sm font-medium text-gray-300">Eventos</button>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="galGrid"></div>
+  </main>
+
+  <div id="appFooter"></div>
+  <script src="js/app.js"></script>
+  <script>
+    const GALERIA = [
+      { cat: 'aulas', img: 'https://images.unsplash.com/photo-1497636577773-f1231844b336?w=800&q=80', title: 'Aula principal' },
+      { cat: 'aulas', img: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&q=80', title: 'Sala grupal' },
+      { cat: 'aulas', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80', title: 'Aula moderna' },
+      { cat: 'biblioteca', img: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800&q=80', title: 'Biblioteca' },
+      { cat: 'biblioteca', img: 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=800&q=80', title: 'Sala de lectura' },
+      { cat: 'online', img: 'https://images.unsplash.com/photo-1531545514256-b1400bc00f31?w=800&q=80', title: 'Tutoría online' },
+      { cat: 'online', img: 'https://images.unsplash.com/photo-1593642634524-b40b5baae6bb?w=800&q=80', title: 'Estudio virtual' },
+      { cat: 'eventos', img: 'https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=800&q=80', title: 'Workshop' },
+      { cat: 'eventos', img: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80', title: 'Charla admisión' },
+      { cat: 'aulas', img: 'https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=800&q=80', title: 'Pizarra digital' },
+      { cat: 'biblioteca', img: 'https://images.unsplash.com/photo-1568667256549-094345857637?w=600&q=80', title: 'Estantería' },
+      { cat: 'online', img: 'https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?w=600&q=80', title: 'Clase remota' }
+    ];
+
+    function pageInit() {
+      const grid = document.getElementById('galGrid');
+      let filter = 'todas';
+
+      function render() {
+        const items = GALERIA.filter(g => filter === 'todas' || g.cat === filter);
+        grid.innerHTML = items.map((g, i) => `
+          <div class="galeria-item aspect-square relative group" data-img="${g.img}">
+            <img src="${g.img}" alt="${g.title}" class="w-full h-full object-cover"/>
+            <div class="absolute inset-0 bg-gradient-to-t from-background-dark/90 via-background-dark/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+              <div>
+                <p class="text-white font-semibold">${g.title}</p>
+                <p class="text-primary text-xs uppercase tracking-wider">${g.cat}</p>
+              </div>
+            </div>
+          </div>`).join('');
+
+        grid.querySelectorAll('.galeria-item').forEach(item => {
+          item.addEventListener('click', () => openLightbox(item.dataset.img));
+        });
+      }
+
+      function openLightbox(img) {
+        const box = document.createElement('div');
+        box.className = 'lightbox';
+        box.innerHTML = '<img src="' + img + '"/><button class="absolute top-6 right-6 h-10 w-10 rounded-full bg-background-card border border-primary/30 flex items-center justify-center text-primary text-xl">&times;</button>';
+        document.body.appendChild(box);
+        box.addEventListener('click', () => box.remove());
+      }
+
+      document.querySelectorAll('#galFilters button').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('#galFilters button').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          filter = btn.dataset.cat;
+          render();
+        });
+      });
+
+      render();
+    }
+  </script>
+</body>
+</html>
